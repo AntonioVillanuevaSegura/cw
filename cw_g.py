@@ -133,9 +133,8 @@ class InterfaceGraphique(tk.Tk):
 		command=lambda: self.play("PLAY"))		
 		self.PLAYButton.grid(row=0,column=2,columnspan = 1)
 		
-		#Check 
+		#Check button (utiliser tous les symboles ou uniquement les lettres)
 		self.checkbutton = tk.Checkbutton(self.FrameSup, text="ALL CHARS", variable=self.option, onvalue=1, offvalue=0)
-		#self.checkbutton.pack()
 		self.checkbutton.grid(row=0,column=3,columnspan = 1)	
 				
 		#Labels		
@@ -162,7 +161,9 @@ class InterfaceGraphique(tk.Tk):
 		
 		#CW Label		
 		self.cwLabel=tk.Label (self.FrameSup,text="CW",justify="center")
-		#self.cwLabel.configure(font=100)
+		#fontStyle.configure(size=fontsize + 2
+		#self.cwLabel.configure(size = 100)
+		self.cwLabel.configure (font=("", 25))
 		self.cwLabel.grid(row=2,column=3)		
 		
 		#Mots Space Label
