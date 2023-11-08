@@ -51,7 +51,7 @@ class cw():
 		self.tone=tone
 				
 	def cw_aleatoire(self,limite):
-		#renvoie une clé aléatoire dans le dictionnaire
+		"""renvoie une clé aléatoire dans le dictionnaire"""
 		lettre=""
 		if limite==0:
 			while (not lettre.isalpha()):
@@ -61,7 +61,7 @@ class cw():
 		return lettre
 
 	def playSound(self,t):
-		#joue un son de freq TONE et d'une durée t
+		"""joue un son de freq TONE et d'une durée t"""
 		# Génère une tonalité sinusoïdale de la fréquence et de la durée spécifiées
 		sin = np.linspace(0, t, int(t * 44100), endpoint=False)
 		audio_data = 0.5 * np.sin(2 * np.pi * self.tone * sin)
@@ -73,7 +73,7 @@ class cw():
 		sd.wait()
 
 	def playChar(self,c):
-		#joue une lettre en télégraphie
+		"""joue une lettre en télégraphie"""
 		lettre= self.cw_dict[c]
 		for s in lettre:
 			if s=='.':
@@ -82,15 +82,9 @@ class cw():
 				self.playSound(LIGNE*self.vitesse)
 			time.sleep(SPACE*self.vitesse)		
 
-	def charCw (c,cw_dict):
-		
-		lettre= cw_dict[c]
-		for s in lettre:
-			if s=='.':
-				print ('.',end="")
-			else:
-				print ('_',end="")
-			print(' ',end="")			
+	def charCw (self, c):
+		""" equivalence cw"""		
+		return self.cw_dict[c]		
 			
 class InterfaceGraphique(tk.Tk):
 	def __init__(self):
@@ -99,8 +93,8 @@ class InterfaceGraphique(tk.Tk):
 		self.creeGui() #Cree GUI tkinter
 		self.cw=cw() #classe CW instance
 		#Thread generation mots
-		self.fil = threading.Thread(target=self.envoiMots)
-		self.fil.daemon = True  # Le fil "thread" s'arrêtera à la fermeture de l'application
+		#self.fil = threading.Thread(target=self.envoiMots)
+		#self.fil.daemon = True  # Le fil "thread" s'arrêtera à la fermeture de l'application
 		
 	def creeGui(self):
 		""" Crée l'interface utilisateur avec tkinter"""
@@ -166,6 +160,11 @@ class InterfaceGraphique(tk.Tk):
 		self.toneLabel=tk.Label (self.FrameSup,text="TONE",justify="center")
 		self.toneLabel.grid(row=1,column=1)
 		
+		#CW Label		
+		self.cwLabel=tk.Label (self.FrameSup,text="CW",justify="center")
+		#self.cwLabel.configure(font=100)
+		self.cwLabel.grid(row=2,column=3)		
+		
 		#Mots Space Label
 		self.toneLabel=tk.Label (self.FrameSup,text="SPACE WORDS",justify="center")
 		self.toneLabel.grid(row=1,column=2)		
@@ -188,6 +187,9 @@ class InterfaceGraphique(tk.Tk):
 
 	def envoiMots(self):
 		"""Pendant PLAY est en lecture, il joue les mots cw"""
+		# fonctionne dans un thread !! 
+		# self.fil = threading.Thread(target=self.envoiMots)
+		
 		text_space=1 #counteur mots , group
 		nmots=0 #nombre de mots
  
@@ -196,13 +198,14 @@ class InterfaceGraphique(tk.Tk):
 		
 		while self.PLAYButton.cget('text') == "PAUSE":
 			lettre= self.cw.cw_aleatoire(self.option.get()) #lettre aleatoire
+			self.cwLabel.config (text= self.cw.charCw (lettre))
 			
-			self.cw.playChar(lettre) #play lettre
+			self.cw.playChar(lettre) #play lettre sound
 			
 			self.cw.setTone(self.tone.get())# set tone freq.
 			self.cw.setVitesse(self.vitesse.get())#set vitesse		
 					
-			self.Texte.insert(tk.END, lettre)  # Ajoute la lettre 		
+			self.Texte.insert(tk.END, lettre)  # Ajoute la lettre au panneu text		
 			self.update()
 			
 			#Space entre mots 
@@ -225,6 +228,8 @@ class InterfaceGraphique(tk.Tk):
 			 
 			
 			time.sleep(SPACE*self.vitesse.get()) #space mots , group sleep
+
+		print ("stop thread ")
 					
 	def play(self,st):
 		""" play-pause button"""
@@ -234,16 +239,16 @@ class InterfaceGraphique(tk.Tk):
 			self.PLAYButton.configure( bg="green" )#couleur 
 			self.PLAYButton.configure( text="PAUSE" )#text
 			
-			#fil = threading.Thread(target=self.envoiMots)
-			#fil.daemon = True  # Le fil "thread" s'arrêtera à la fermeture de l'application
+			#Run Thread envoiMots jusqu'a PAUSE
+			self.fil = threading.Thread(target=self.envoiMots)
+			self.fil.daemon = True  # Le fil "thread" s'arrêtera à la fermeture de l'application
 			self.fil.start()
+			#print ("Debug Threads actives ", threading.enumerate())
 		
 		else:
-		
-			if self.fil.is_alive():
-				#self.fil.stop()
-				self.fil.joint()
 			
+			#print ("Debug Threads actives ", threading.enumerate())
+
 			self.PLAYButton.configure( bg="red" )
 			self.PLAYButton.configure( text="PLAY" )
 		
@@ -269,10 +274,7 @@ class InterfaceGraphique(tk.Tk):
 		if nmots>0 and ecoule>0 :		
 			tmp=1*60/ecoule
 			self.motspmLabel.config(text= round (tmp) )
-			
-	
-
-						
+									
 if __name__ == "__main__":
   app = InterfaceGraphique() #Instance InterfaceGraphique tkinter
   app.mainloop() #tkinter main loop
