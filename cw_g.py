@@ -121,7 +121,7 @@ class InterfaceGraphique(tk.Tk):
 		
 		#Window					
 		#tkinter window
-		self.title('Parkare ')
+		self.title('CW Antonio VILLANUEVA')
 		self.resizable( False, False )
 		self.geometry("750x250")
 				
