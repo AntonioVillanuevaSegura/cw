@@ -2,6 +2,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8
 
+"""
+sudo apt install python3-pip
+pip install sounddevice
+pip install pynput
+pip install tk
+pip install numpy
+
+"""
+
 import tkinter as tk
 from tkinter import ttk
 

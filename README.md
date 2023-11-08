@@ -10,6 +10,7 @@ vous permet de changer la fréquence de tonalité et les mots par minute
 
 dépendances en python
 
+sudo apt install python3-pip
 pip install sounddevice
 pip install pynput
 pip install tk
