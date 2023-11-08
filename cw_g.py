@@ -183,7 +183,8 @@ class InterfaceGraphique(tk.Tk):
 		self.SpaceMotsScale.grid(row=2,column=2,columnspan = 1)		
 		
 		#TEXT
-		self.Texte=tk.Text(self.FrameInf,width=WIDTH_TEXT,height=50)
+		self.Texte=tk.Text(self.FrameInf,width=WIDTH_TEXT,height=8,state="normal",yscrollcommand=True)
+		#self.Texte.(yscrollcommand=True)
 		self.Texte.grid(row=1,column=1,columnspan = 1)
 
 	def envoiMots(self):
